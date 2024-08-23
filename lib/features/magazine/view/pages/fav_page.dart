@@ -1,6 +1,6 @@
+import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:magazine/common/app_route.dart';
 import 'package:magazine/common/theme/app_text.dart';
@@ -54,61 +54,188 @@ class _FavoritePageState extends State<FavoritePage> {
           user: cAuth.dataUser,
         );
       }),
-      body: Stack(
-        children: [
-          BackgroundWidget(),
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: size.height * .06),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Favorit Saya',
-                        style: fXl.copyWith(color: Colors.white),
-                      ),
-                      if (!cAuth.isAuthenticated) ...[
-                        Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.white, shape: BoxShape.circle),
-                          padding: EdgeInsets.all(8),
-                          child: InkWell(
-                              onTap: () async {
-                                await cAuth.getout();
-                                try {
-                                  final user = await cAuth.login();
+      body: ColorfulSafeArea(
+        color: BaseColor.primary,
+        child: Stack(
+          children: [
+            BackgroundWidget(),
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: size.height * .08),
+                  GetBuilder<MagazineController>(
+                    builder: (_) {
+                      if (!cAuth.isAuthenticated) {
+                        return SizedBox(
+                          height: 80,
+                        );
+                      }
+                      if (_.loading) {
+                        return SizedBox(
+                          height: size.height * .3,
+                          child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: 2,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: const LoadingCustom(
+                                  height: 60,
+                                  width: double.infinity,
+                                  radius: 20,
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
 
-                                  if (user == null) {
-                                    Fluttertoast.showToast(
-                                        backgroundColor: Colors.red,
-                                        msg: "Gagal login");
-                                  } else {
-                                    print(user.id);
-                                    Session.saveGooglePhoto(user.photoUrl);
-                                    await cAuth.cbLogin(
-                                        user.id, user.email, user.displayName);
-                                  }
-                                } catch (e) {
-                                  Get.snackbar(
-                                      'Error', 'Failed to sign in with Google');
+                      if (_.dataCacheMagazine.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: BlankItem(),
+                        );
+                      }
+                      return SizedBox(
+                        height: _.dataCacheMagazine.length * 100,
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          itemCount: _.dataCacheMagazine.length,
+                          itemBuilder: (context, index) {
+                            MagazineItem data = _.dataCacheMagazine[index];
+                            return FavCard(
+                              img: '${Endpoint.storage}/${data.cover}',
+                              title: data.name,
+                              onTap: () => Get.toNamed(AppRoutes.detailMagazine,
+                                  arguments: data),
+                              onPressed: () {
+                                if (cAuth.isAuthenticated) {
+                                  _.addOrRemoveMagazine(data).then((value) {
+                                    if (value) {
+                                      _.loadMagazineFav();
+                                    }
+                                  });
+                                } else {
+                                  Get.toNamed(AppRoutes.login);
                                 }
                               },
-                              child: Icon(
-                                Icons.logout_rounded,
-                                color: BaseColor.primary,
-                              )),
-                        )
-                      ] else ...[
-                        Builder(builder: (ctx) {
-                          return Container(
-                              decoration: const BoxDecoration(
-                                  color: Colors.white, shape: BoxShape.circle),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Rekomendasi Favorit Saya',
+                          style: fprimMd,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(AppRoutes.category,
+                                arguments: 'recom=Rekomendasi untukmu');
+                          },
+                          child: Text(
+                            'Semuanya',
+                            style: fprimMd,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(
+                    height: 280,
+                    child: GetBuilder<MagazineController>(builder: (_) {
+                      if (_.loading) {
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            return const LoadingCardWidget();
+                          },
+                        );
+                      }
+
+                      if (_.listMagazine.isEmpty) {
+                        return const BlankItem();
+                      }
+
+                      List<MagazineItem> takeIt =
+                          _.listMagazine.take(5).toList();
+
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const ScrollPhysics(),
+                        itemCount: takeIt.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          MagazineItem data = takeIt[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 24),
+                            child: MagazineCard(
+                              item: data,
+                              image: "${Endpoint.storage}/${data.cover}",
+                              title: data.name,
+                              release: data.dateRelease,
+                              view: data.likes,
+                              pressRead: () {
+                                Get.toNamed(AppRoutes.detailMagazine,
+                                    arguments: data);
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              color: BaseColor.primary,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Favorit Saya',
+                    style: fXl.copyWith(color: Colors.white),
+                  ),
+                  if (!cAuth.isAuthenticated) ...[
+                    SizedBox(
+                      width: 60,
+                      child: ButtonCustom(
+                          padding: 10,
+                          borderRadius: 20,
+                          onClick: () => Get.toNamed(AppRoutes.login),
+                          text: 'Masuk'),
+                    )
+                  ] else ...[
+                    Builder(builder: (ctx) {
+                      return Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 1.5,
+                                      color:
+                                          BaseColor.primary.withOpacity(0.6))),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8),
                                 child: InkWell(
                                   onTap: () {
                                     Scaffold.of(ctx).openDrawer();
@@ -121,158 +248,13 @@ class _FavoritePageState extends State<FavoritePage> {
                                   ),
                                 ),
                               ));
-                        }),
-                      ]
-                    ],
-                  ),
-                ),
-                GetBuilder<MagazineController>(
-                  builder: (_) {
-                    if (!cAuth.isAuthenticated) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 40, horizontal: 20),
-                        child: ButtonCustom(
-                            onClick: () {
-                              Get.toNamed(AppRoutes.login);
-                            },
-                            text: 'Login dulu yuk'),
-                      );
-                    }
-                    if (_.loading) {
-                      return SizedBox(
-                        height: size.height * .3,
-                        child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          itemCount: 2,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 15),
-                              child: const LoadingCustom(
-                                height: 60,
-                                width: double.infinity,
-                                radius: 20,
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    }
-
-                    if (_.dataCacheMagazine.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40),
-                        child: BlankItem(),
-                      );
-                    }
-                    return SizedBox(
-                      height: _.dataCacheMagazine.length * 100,
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        itemCount: _.dataCacheMagazine.length,
-                        itemBuilder: (context, index) {
-                          MagazineItem data = _.dataCacheMagazine[index];
-                          return FavCard(
-                            img: '${Endpoint.storage}/${data.cover}',
-                            title: data.name,
-                            onTap: () => Get.toNamed(AppRoutes.detailMagazine,
-                                arguments: data),
-                            onPressed: () {
-                              if (cAuth.isAuthenticated) {
-                                _.addOrRemoveMagazine(data).then((value) {
-                                  if (value) {
-                                    _.loadMagazineFav();
-                                  }
-                                });
-                              } else {
-                                Get.toNamed(AppRoutes.login);
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Rekomendasi Favorit Saya',
-                        style: fprimMd,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(AppRoutes.category,
-                              arguments: 'recom=Rekomendasi untukmu');
-                        },
-                        child: Text(
-                          'Semuanya',
-                          style: fprimMd,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                SizedBox(
-                  height: 280,
-                  child: GetBuilder<MagazineController>(builder: (_) {
-                    if (_.loading) {
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          return const LoadingCardWidget();
-                        },
-                      );
-                    }
-
-                    if (_.listMagazine.isEmpty) {
-                      return const BlankItem();
-                    }
-
-                    List<MagazineItem> takeIt = _.listMagazine.take(5).toList();
-
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: const ScrollPhysics(),
-                      itemCount: takeIt.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        MagazineItem data = takeIt[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 24),
-                          child: MagazineCard(
-                            item: data,
-                            image: "${Endpoint.storage}/${data.cover}",
-                            title: data.name,
-                            release: data.dateRelease,
-                            view: data.likes,
-                            pressRead: () {
-                              Get.toNamed(AppRoutes.detailMagazine,
-                                  arguments: data);
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  }),
-                )
-              ],
+                    }),
+                  ]
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: const CBottomNav(
         selectedItem: 3,

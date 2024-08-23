@@ -1,3 +1,4 @@
+import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,6 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  // final MagazineItem item = Get.arguments;
   final cAuth = Get.put(AuthController());
 
   final cMagazine = Get.put(MagazineController());
@@ -39,147 +39,151 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            backgroundImage(),
-            BackButtonCustom(
-              padding: EdgeInsets.only(left: 18, top: 35),
-              color: Colors.white,
-            ),
-            customShadow(),
-            Column(
-              children: [
-                content(),
-                const SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Terkait',
-                        style: fprimMd,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(AppRoutes.category,
-                              arguments:
-                                  'categories=${widget.item.relationship!.map((e) => e.id).join(',')}');
-                        },
-                        child: Text(
-                          'Semuanya',
+      body: ColorfulSafeArea(
+        color: BaseColor.primary.withOpacity(0.6),
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              backgroundImage(),
+              BackButtonCustom(
+                padding: EdgeInsets.only(left: 18, top: 35),
+                color: Colors.white,
+              ),
+              customShadow(),
+              Column(
+                children: [
+                  content(),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Terkait',
                           style: fprimMd,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                SizedBox(
-                  height: 280,
-                  child: GetBuilder<MagazineController>(builder: (_) {
-                    List<MagazineItem> relatedItems = _.listMagazine
-                        .where((m) => m.relationship!.any((e) => widget
-                            .item.relationship!
-                            .any((item2) => item2.id == e.id)))
-                        .toList()
-                        .where((magazine) => magazine.id != widget.item.id)
-                        .toList();
-
-                    List<MagazineItem> result = relatedItems.take(5).toList();
-
-                    if (result.isEmpty) {
-                      return const BlankItem();
-                    }
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: const ScrollPhysics(),
-                      itemCount: result.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        MagazineItem data = result[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 24),
-                          child: MagazineCard(
-                            item: data,
-                            image: "${Endpoint.storage}/${data.cover}",
-                            title: data.name,
-                            release: data.dateRelease,
-                            view: data.likes,
-                            pressRead: () {
-                              Get.toNamed(AppRoutes.detailMagazine,
-                                  arguments: data, preventDuplicates: false);
-                            },
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(AppRoutes.category,
+                                arguments:
+                                    'categories=${widget.item.relationship!.map((e) => e.id).join(',')}');
+                          },
+                          child: Text(
+                            'Semuanya',
+                            style: fprimMd,
                           ),
-                        );
-                      },
-                    );
-                  }),
-                ),
-              ],
-            ),
-          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(
+                    height: 280,
+                    child: GetBuilder<MagazineController>(builder: (_) {
+                      List<MagazineItem> relatedItems = _.listMagazine
+                          .where((m) => m.relationship!.any((e) => widget
+                              .item.relationship!
+                              .any((item2) => item2.id == e.id)))
+                          .toList()
+                          .where((magazine) => magazine.id != widget.item.id)
+                          .toList();
+        
+                      List<MagazineItem> result = relatedItems.take(5).toList();
+        
+                      if (result.isEmpty) {
+                        return const BlankItem();
+                      }
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const ScrollPhysics(),
+                        itemCount: result.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          MagazineItem data = result[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 24),
+                            child: MagazineCard(
+                              item: data,
+                              image: "${Endpoint.storage}/${data.cover}",
+                              title: data.name,
+                              release: data.dateRelease,
+                              view: data.likes,
+                              pressRead: () {
+                                Get.toNamed(AppRoutes.detailMagazine,
+                                    arguments: data, preventDuplicates: false);
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 30),
-        child: FloatingActionButton.extended(
-            backgroundColor: BaseColor.primary,
-            onPressed: () async {
-              if (widget.item.pdf!.isNotEmpty) {
-                await MagazineService.fetchLike(widget.item.id ?? 0);
-
-                Get.to(() => PdfViewCustom(
-                      path: '${Endpoint.storage}/${widget.item.pdf}',
-                      magazineId: widget.item.id,
-                    ));
-              }
-            },
-            icon: Icon(CupertinoIcons.book_fill, color: Colors.white,),
-            label: Text(
-              'Mulai membaca',
-              style: fLg.copyWith(fontSize: 17, color: Colors.white),
-            )),
-      ),
+      floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: BaseColor.primary,
+          onPressed: () async {
+            if (widget.item.pdf!.isNotEmpty) {
+              await MagazineService.fetchLike(widget.item.id ?? 0);
+      
+              Get.to(() => PdfViewCustom(
+                    path: '${Endpoint.storage}/${widget.item.pdf}',
+                    magazineId: widget.item.id,
+                  ));
+            }
+          },
+          icon: Icon(CupertinoIcons.book_fill, color: Colors.white,),
+          label: Text(
+            'Mulai membaca',
+            style: fLg.copyWith(fontSize: 17, color: Colors.white),
+          )),
     );
   }
 
   Widget backgroundImage() {
-    return ExtendedImage.network(
-      "${Endpoint.storage}/${widget.item.cover}",
-      fit: BoxFit.cover,
-      handleLoadingProgress: true,
-      width: double.infinity,
-      height: 390,
-      loadStateChanged: (state) {
-        if (state.extendedImageLoadState == LoadState.failed) {
-          return AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Material(
-                borderRadius: BorderRadius.circular(18),
-                color: Colors.grey[300],
-                child: const Icon(Icons.broken_image_outlined),
-              ));
-        }
-
-        if (state.extendedImageLoadState == LoadState.loading) {
-          return LoadingCustom(height: 390, width: double.infinity);
-        }
-        return null;
-      },
+    return AspectRatio(
+      aspectRatio: 0.76,
+      child: ExtendedImage.network(
+        "${Endpoint.storage}/${widget.item.cover}",
+        fit: BoxFit.cover,
+        handleLoadingProgress: true,
+        loadStateChanged: (state) {
+          if (state.extendedImageLoadState == LoadState.failed) {
+            return AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Material(
+                  borderRadius: BorderRadius.circular(18),
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image_outlined),
+                ));
+          }
+      
+          if (state.extendedImageLoadState == LoadState.loading) {
+            return LoadingCustom(height: 390, width: double.infinity);
+          }
+          return null;
+        },
+      ),
     );
   }
 
   Widget customShadow() {
     return Container(
-      height: 215,
+      height: 340,
       width: double.infinity,
-      margin: const EdgeInsets.only(top: 175),
+      margin: const EdgeInsets.only(top: 135),
       decoration: const BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,

@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
   animated_text_kit: ^4.2.2
   carousel_slider: ^4.2.1
+  colorful_safe_area: ^1.0.0
   connectivity_plus: ^6.0.3
   cupertino_icons: ^1.0.6
   d_method: ^0.2.6

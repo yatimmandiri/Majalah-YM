@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:magazine/common/app_route.dart';
 import 'package:magazine/common/theme/app_text.dart';
@@ -32,6 +31,7 @@ import 'package:magazine/shared/global-widgets/navbar_bottom.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:magazine/common/utils/app_format.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:colorful_safe_area/colorful_safe_area.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -92,75 +92,117 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           user: authController.dataUser,
         );
       }),
-      body: RefreshIndicator.adaptive(
-        color: BaseColor.primary,
-        onRefresh: () async {
-          setState(() {
-            refresh();
-          });
-        },
-        child: Stack(
-          children: [
-            BackgroundWidget(),
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: size.height * .06),
-                  header(),
-                  const SizedBox(height: 30),
-                  // if (cMaga.isOffline) ...[
-                  //   SizedBox(
-                  //     height: size.height,
-                  //     width: double.infinity,
-                  //     child: ListView.builder(
-                  //       itemCount: cMaga.dataCacheMagazine.length,
-                  //       itemBuilder: (context, index) {
-                  //         MagazineItem item =
-                  //             cMaga.dataCacheMagazine[index];
-                  //         return FavCard(
-                  //             title: item.name,
-                  //             onTap: () {},
-                  //             onPressed: () {});
-                  //       },
-                  //     ),
-                  //   )
-                  // ] else ...[
+      body: ColorfulSafeArea(
+        color: BaseColor.primary.withOpacity(0.6),
+        child: RefreshIndicator.adaptive(
+          color: BaseColor.primary,
+          onRefresh: () async {
+            setState(() {
+              refresh();
+            });
+          },
+          child: Stack(
+            children: [
+              BackgroundWidget(),
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: size.height * .03),
+                    header(),
+                    const SizedBox(height: 30),
+                    // if (cMaga.isOffline) ...[
+                    //   SizedBox(
+                    //     height: size.height,
+                    //     width: double.infinity,
+                    //     child: ListView.builder(
+                    //       itemCount: cMaga.dataCacheMagazine.length,
+                    //       itemBuilder: (context, index) {
+                    //         MagazineItem item =
+                    //             cMaga.dataCacheMagazine[index];
+                    //         return FavCard(
+                    //             title: item.name,
+                    //             onTap: () {},
+                    //             onPressed: () {});
+                    //       },
+                    //     ),
+                    //   )
+                    // ] else ...[
 
-                  // ]
-                  banner(),
-                  const SizedBox(height: 30),
-                  newest(),
-                  const SizedBox(height: 30),
-                  popular(),
-                  youtube(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        bestOfTheDayCard(size, context),
-                        // RichText(
-                        //   text: const TextSpan(
-                        //     children: [
-                        //       TextSpan(text: "Continue "),
-                        //       TextSpan(
-                        //         text: "reading...",
-                        //         style: TextStyle(fontWeight: FontWeight.bold),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        const SizedBox(height: 30),
-                        continueRead(size),
-                        const SizedBox(height: 40),
-                      ],
+                    // ]
+                    banner(),
+                    const SizedBox(height: 30),
+                    newest(),
+                    const SizedBox(height: 30),
+                    popular(),
+                    youtube(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          bestOfTheDayCard(size, context),
+                          // RichText(
+                          //   text: const TextSpan(
+                          //     children: [
+                          //       TextSpan(text: "Continue "),
+                          //       TextSpan(
+                          //         text: "reading...",
+                          //         style: TextStyle(fontWeight: FontWeight.bold),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          const SizedBox(height: 30),
+                          continueRead(size),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 35, right: 20),
+                  child: !authController.isAuthenticated
+                      ? SizedBox(
+                          width: 60,
+                          child: ButtonCustom(
+                              padding: 10,
+                              borderRadius: 20,
+                              onClick: () => Get.toNamed(AppRoutes.login),
+                              text: 'Masuk'),
+                        )
+                      : Builder(builder: (ctx) {
+                          return Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 1.5,
+                                      color:
+                                          BaseColor.primary.withOpacity(0.6))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: InkWell(
+                                  onTap: () {
+                                    Scaffold.of(ctx).openDrawer();
+                                  },
+                                  child: SvgPicture.asset(
+                                    'assets/icons/menu.svg',
+                                    color: BaseColor.primary,
+                                    height: 23,
+                                    width: 23,
+                                  ),
+                                ),
+                              ));
+                        }),
+                ),
+              )
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: const CBottomNav(
@@ -565,56 +607,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           //   ),
           // ),
           // SizedBox(width: 15,),
-          if (!authController.isAuthenticated) ...[
-            Container(
-              decoration: const BoxDecoration(
-                  color: Colors.white, shape: BoxShape.circle),
-              padding: EdgeInsets.all(8),
-              child: InkWell(
-                  onTap: () async {
-                    await authController.getout();
-                    try {
-                      final user = await authController.login();
-
-                      if (user == null) {
-                        Fluttertoast.showToast(
-                            backgroundColor: Colors.red, msg: "Gagal masuk");
-                      } else {
-                        print(user.id);
-                        Session.saveGooglePhoto(user.photoUrl);
-                        await authController.cbLogin(
-                            user.id, user.email, user.displayName);
-                      }
-                    } catch (e) {
-                      Get.snackbar('Error', 'Failed to sign in with Google');
-                    }
-                  },
-                  child: Icon(
-                    Icons.logout_rounded,
-                    color: BaseColor.primary,
-                  )),
-            )
-          ] else ...[
-            Builder(builder: (ctx) {
-              return Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        Scaffold.of(ctx).openDrawer();
-                      },
-                      child: SvgPicture.asset(
-                        'assets/icons/menu.svg',
-                        color: BaseColor.primary,
-                        height: 20,
-                        width: 20,
-                      ),
-                    ),
-                  ));
-            }),
-          ]
         ],
       ),
     );
@@ -798,7 +790,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 padding: EdgeInsets.only(
                   left: 24,
                   top: 24,
-                  right: size.width * .35,
+                  right: size.width * .1,
                 ),
                 height: 230,
                 width: double.infinity,
@@ -816,23 +808,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      item.name ?? '',
-                      style: fLg,
+                    Padding(
+                      padding: EdgeInsets.only(right: size.width * .25),
+                      child: Text(
+                        item.name ?? '',
+                        style: fLg,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10.0),
-                        child: Text(
-                          AppFormat.removeHtmlTags(item.description!),
-                          textAlign: TextAlign.justify,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: fsecSm,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        AppFormat.removeHtmlTags(item.description!),
+                        textAlign: TextAlign.justify,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: fsecMd.copyWith(fontSize: 12),
                       ),
                     ),
                   ],

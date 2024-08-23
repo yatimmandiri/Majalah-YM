@@ -54,7 +54,26 @@ class AuthController extends GetxController {
   }
 
   // Method untuk login dengan Google
-  Future<GoogleSignInAccount?> login() async => await _googleSignIn.signIn();
+  Future<GoogleSignInAccount?> login() async {
+    await getout();
+
+    try {
+      final user = await _googleSignIn.signIn();
+
+      if (user == null) {
+        Get.back();
+      } else {
+        print(user.id);
+        print(user.photoUrl);
+        Session.saveGooglePhoto(user.photoUrl);
+        await cbLogin(user.id, user.email, user.displayName);
+      }
+    } catch (e) {
+      Get.back();
+      Fluttertoast.showToast(backgroundColor: Colors.red, msg: "Gagal Masuk");
+    }
+    return null;
+  }
 
   Future<void> cbLogin(String googleId, email, name) async {
     String url = Endpoint.cbGoogleId;
@@ -150,6 +169,11 @@ class AuthController extends GetxController {
     }
 
     update();
+  }
+
+  void cancelGoogleSignIn() {
+    // Membatalkan login Google jika sedang berlangsung
+    _googleSignIn.disconnect();
   }
 
   bool isValidWhatsAppNumber(String number) {

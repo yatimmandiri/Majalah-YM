@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:magazine/common/app_route.dart';
@@ -8,6 +9,7 @@ import 'package:magazine/features/blog/model/blog_model.dart';
 import 'package:magazine/features/blog/model/news_model.dart';
 import 'package:magazine/features/blog/view/widgets/blog_card.dart';
 import 'package:magazine/shared/global-widgets/blank_item.dart';
+import 'package:magazine/shared/global-widgets/dialog_custom.dart';
 import 'package:magazine/shared/global-widgets/inputs.dart';
 import 'package:magazine/shared/global-widgets/loading_widget.dart';
 
@@ -89,7 +91,18 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                     ),
                     Text(
                       'Pencarian',
-                      style: fLg,
+                      style: fsecLg,
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: GestureDetector(
+                          onTap: () => DialogCustom.showConfirmationDialog(
+                                'Tindakan',
+                                'Untuk mencari literasi, ketik saja pada kolom pencarian, setelah itu tekan tombol ikon cari',
+                                () {},
+                              ),
+                          child: Icon(CupertinoIcons.question_circle, color: BaseColor.secondary,)),
                     )
                   ],
                 ),
@@ -265,7 +278,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                               if (_.listBlog.isEmpty) {
                                 return const BlankItem();
                               }
-                            
+
                               if (_.loading) {
                                 return SizedBox(
                                   height: Get.height * .5,
@@ -285,7 +298,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                   ),
                                 );
                               }
-                            
+
                               return ListView.builder(
                                 controller: scrollBlogC,
                                 itemCount: _.listBlog.length + 1,
@@ -294,7 +307,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                 itemBuilder: (context, index) {
                                   if (index < _.listBlog.length) {
                                     BlogItem data = _.listBlog[index];
-                            
+
                                     return BlogCard(
                                       image: data.thumbnail,
                                       title: data.title,
@@ -311,7 +324,8 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                       child: Center(
                                           child: _.hasMoreBlog.isTrue
                                               ? CircularProgressIndicator()
-                                              : Text('Sudah tidak ada data lagi')),
+                                              : Text(
+                                                  'Sudah tidak ada data lagi')),
                                     );
                                   }
                                 },

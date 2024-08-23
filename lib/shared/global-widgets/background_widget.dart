@@ -16,8 +16,8 @@ class BackgroundWidget extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          left: -getBigDiameter(context) / 6,
-          top: -getBigDiameter(context) / 1.6,
+          left: -getBigDiameter(context) / 7,
+          top: -getBigDiameter(context) / 2,
           child: Container(
             width: getBigDiameter(context),
             height: getBigDiameter(context),
