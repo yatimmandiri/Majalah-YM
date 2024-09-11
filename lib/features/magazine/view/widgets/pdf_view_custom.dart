@@ -102,7 +102,7 @@ class _PdfViewCustomState extends State<PdfViewCustom>
           },
         ),
         title: Text(
-          widget.header ?? "Yatim Mandiri Magazine",
+          widget.header ?? "Majalah Yatim Mandiri",
           style: fLg.copyWith(color: Colors.white),
         ),
       ),

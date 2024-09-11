@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "960350532245",
+    "project_id": "majalah-yatim-mandiri",
+    "storage_bucket": "majalah-yatim-mandiri.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960350532245:android:5f79252d0ee3a9c6b1e19c",
+        "android_client_info": {
+          "package_name": "com.majalahym.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "960350532245-jomk4ptfve8f42018evrnnrq9l0111q6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrazow5oUwV9_CaxrOzVIxa89Ttp0XV50"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960350532245-jomk4ptfve8f42018evrnnrq9l0111q6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

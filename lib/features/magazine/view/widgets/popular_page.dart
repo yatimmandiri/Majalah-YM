@@ -49,10 +49,11 @@ class _PopularPageState extends State<PopularPage> {
           Padding(
             padding: const EdgeInsets.only(right: 15),
             child: GestureDetector(
-                onTap: () => DialogCustom.showConfirmationDialog('Konfirmasi',
-                      'Gulir layar anda ke bawah, hingga muncul indikator loading 🔃',
-                      () {},
-                    ),
+                onTap: () => DialogCustom.showConfirmationDialog(
+                    'Konfirmasi',
+                    'Gulir layar anda ke bawah, hingga muncul indikator loading 🔃',
+                    () {},
+                    true),
                 child: Icon(CupertinoIcons.question_circle)),
           )
         ],

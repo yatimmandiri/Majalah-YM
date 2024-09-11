@@ -70,7 +70,7 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       Get.back();
-      Fluttertoast.showToast(backgroundColor: Colors.red, msg: "Gagal Masuk");
+      Fluttertoast.showToast(backgroundColor: Colors.red, msg: "Gagal Masuk, Error $e");
     }
     return null;
   }
@@ -101,7 +101,7 @@ class AuthController extends GetxController {
           Get.offAllNamed(AppRoutes.home);
         });
       } else {
-        Fluttertoast.showToast(backgroundColor: Colors.red, msg: "Gagal login");
+        Fluttertoast.showToast(backgroundColor: Colors.red, msg: "Gagal login $response");
         Timer(const Duration(seconds: 2), () {
           _loading.value = false;
         });

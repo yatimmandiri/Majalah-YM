@@ -111,12 +111,9 @@ class DrawerCustom extends StatelessWidget {
                 onClick: () async {
                   if (authController.isAuthenticated) {
                     DialogCustom.showConfirmationDialog(
-                      'Konfirmasi',
-                      'Yakin anda ingin keluar?',
-                      () {
-                        authController.logout();
-                      },
-                    );
+                        'Konfirmasi', 'Yakin anda ingin keluar?', () {
+                      authController.logout();
+                    }, false);
                   } else {
                     await authController.getout();
                     try {

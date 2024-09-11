@@ -16,7 +16,7 @@ void main() async {
   await FcmFirebase().initNotif();
   await FirebaseMessaging.instance.subscribeToTopic('Subscribed');
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // Warna background status bar
     statusBarIconBrightness: Brightness.light, // Warna ikon status bar menjadi putih
     statusBarBrightness: Brightness.light, // Untuk perangkat iOS
@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Majalah Yatim Mandiri',
-      transitionDuration: Duration(milliseconds: 250),
+      title: 'MASA by Yatim Mandiri',
+      transitionDuration: const Duration(milliseconds: 250),
       defaultTransition: Transition.rightToLeftWithFade,
       theme: ThemeData(
           scaffoldBackgroundColor: BackgroundColor().main,

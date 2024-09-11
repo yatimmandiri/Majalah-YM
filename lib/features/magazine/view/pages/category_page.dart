@@ -65,7 +65,8 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         title: AnimatedTextKit(
           animatedTexts: [
-            TypewriterAnimatedText('Kumpulan  ${cMaga.nameValue.toSet().join(', ')}',
+            TypewriterAnimatedText(
+                'Kumpulan  ${cMaga.nameValue.toSet().join(', ')}',
                 textStyle: fLg.copyWith(fontSize: 18, color: Colors.white),
                 speed: Duration(milliseconds: 100),
                 textAlign: TextAlign.center),
@@ -77,10 +78,10 @@ class _CategoryPageState extends State<CategoryPage> {
             padding: const EdgeInsets.only(right: 15),
             child: GestureDetector(
                 onTap: () => DialogCustom.showConfirmationDialog(
-                      'Informasi',
-                      'Gulir layar anda ke bawah, hingga muncul indikator loading 🔃',
-                      () {},
-                    ),
+                    'Informasi',
+                    'Gulir layar anda ke bawah, hingga muncul indikator loading 🔃',
+                    () {},
+                    true),
                 child: Icon(CupertinoIcons.question_circle)),
           )
         ],

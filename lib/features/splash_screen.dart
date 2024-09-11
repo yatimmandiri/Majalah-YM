@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       setState(() {
         _visible = true;
       });
@@ -41,8 +41,8 @@ class _SplashScreenState extends State<SplashScreen> {
             child: InkWell(
               onTap: () {},
               child: Image.asset(
-                'assets/images/logo.jpeg',
-                width: 100,
+                'assets/images/welcome.png',
+                width: 350,
                 fit: BoxFit.cover,
               ),
             ),

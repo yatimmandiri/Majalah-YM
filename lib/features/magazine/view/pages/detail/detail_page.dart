@@ -21,6 +21,7 @@ import 'package:magazine/shared/global-widgets/buttons.dart';
 import 'package:magazine/shared/global-widgets/inputs.dart';
 import 'package:magazine/shared/global-widgets/loading_widget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class DetailPage extends StatefulWidget {
   DetailPage({super.key, required this.item});
@@ -41,93 +42,99 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       body: ColorfulSafeArea(
         color: BaseColor.primary.withOpacity(0.6),
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              backgroundImage(),
-              BackButtonCustom(
-                padding: EdgeInsets.only(left: 18, top: 35),
-                color: Colors.white,
-              ),
-              customShadow(),
-              Column(
-                children: [
-                  content(),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Terkait',
-                          style: fprimMd,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(AppRoutes.category,
-                                arguments:
-                                    'categories=${widget.item.relationship!.map((e) => e.id).join(',')}');
-                          },
-                          child: Text(
-                            'Semuanya',
+        child: RefreshIndicator.adaptive(
+          color: BaseColor.primary,
+          onRefresh: () => cMagazine.getMagazine(),
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                backgroundImage(),
+                BackButtonCustom(
+                  padding: EdgeInsets.only(left: 18, top: 35),
+                  color: Colors.white,
+                ),
+                customShadow(),
+                Column(
+                  children: [
+                    content(),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Terkait',
                             style: fprimMd,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  SizedBox(
-                    height: 280,
-                    child: GetBuilder<MagazineController>(builder: (_) {
-                      List<MagazineItem> relatedItems = _.listMagazine
-                          .where((m) => m.relationship!.any((e) => widget
-                              .item.relationship!
-                              .any((item2) => item2.id == e.id)))
-                          .toList()
-                          .where((magazine) => magazine.id != widget.item.id)
-                          .toList();
-        
-                      List<MagazineItem> result = relatedItems.take(5).toList();
-        
-                      if (result.isEmpty) {
-                        return const BlankItem();
-                      }
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        physics: const ScrollPhysics(),
-                        itemCount: result.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          MagazineItem data = result[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 24),
-                            child: MagazineCard(
-                              item: data,
-                              image: "${Endpoint.storage}/${data.cover}",
-                              title: data.name,
-                              release: data.dateRelease,
-                              view: data.likes,
-                              pressRead: () {
-                                Get.toNamed(AppRoutes.detailMagazine,
-                                    arguments: data, preventDuplicates: false);
-                              },
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(AppRoutes.category,
+                                  arguments:
+                                      'categories=${widget.item.relationship!.map((e) => e.id).join(',')}');
+                            },
+                            child: Text(
+                              'Semuanya',
+                              style: fprimMd,
                             ),
-                          );
-                        },
-                      );
-                    }),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                ],
-              ),
-            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SizedBox(
+                      height: 280,
+                      child: GetBuilder<MagazineController>(builder: (_) {
+                        List<MagazineItem> relatedItems = _.listMagazine
+                            .where((m) => m.relationship!.any((e) => widget
+                                .item.relationship!
+                                .any((item2) => item2.id == e.id)))
+                            .toList()
+                            .where((magazine) => magazine.id != widget.item.id)
+                            .toList();
+
+                        List<MagazineItem> result =
+                            relatedItems.take(5).toList();
+
+                        if (result.isEmpty) {
+                          return const BlankItem();
+                        }
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          physics: const ScrollPhysics(),
+                          itemCount: result.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            MagazineItem data = result[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 24),
+                              child: MagazineCard(
+                                item: data,
+                                image: "${Endpoint.storage}/${data.cover}",
+                                title: data.name,
+                                release: data.dateRelease,
+                                view: data.likes,
+                                pressRead: () {
+                                  Get.toNamed(AppRoutes.detailMagazine,
+                                      arguments: data,
+                                      preventDuplicates: false);
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      }),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -137,14 +144,17 @@ class _DetailPageState extends State<DetailPage> {
           onPressed: () async {
             if (widget.item.pdf!.isNotEmpty) {
               await MagazineService.fetchLike(widget.item.id ?? 0);
-      
+
               Get.to(() => PdfViewCustom(
                     path: '${Endpoint.storage}/${widget.item.pdf}',
                     magazineId: widget.item.id,
                   ));
             }
           },
-          icon: Icon(CupertinoIcons.book_fill, color: Colors.white,),
+          icon: Icon(
+            CupertinoIcons.book_fill,
+            color: Colors.white,
+          ),
           label: Text(
             'Mulai membaca',
             style: fLg.copyWith(fontSize: 17, color: Colors.white),
@@ -169,7 +179,7 @@ class _DetailPageState extends State<DetailPage> {
                   child: const Icon(Icons.broken_image_outlined),
                 ));
           }
-      
+
           if (state.extendedImageLoadState == LoadState.loading) {
             return LoadingCustom(height: 390, width: double.infinity);
           }
@@ -254,11 +264,21 @@ class _DetailPageState extends State<DetailPage> {
                         Get.toNamed(AppRoutes.login);
                       }
                     },
-                    icon: Icon(
-                      exists
-                          ? Icons.bookmark_outlined
-                          : Icons.bookmark_border_rounded,
-                      color: exists ? BaseColor.primary : Colors.white,
+                    icon: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Icon(
+                          Icons.bookmark_border_rounded,
+                          color: Colors.white,
+                          size: 29,
+                        ),
+                        Icon(
+                          Icons.bookmark,
+                          color:
+                              exists ? BaseColor.primary : Colors.transparent,
+                          size: 24,
+                        ),
+                      ],
                     ),
                   );
                 }),
@@ -291,20 +311,45 @@ class _DetailPageState extends State<DetailPage> {
                 Obx(() {
                   return Column(
                     children: [
-                      Text(
-                          cMagazine.isExpanded.value
-                              ? AppFormat.removeHtmlTags(
-                                  widget.item.description!)
-                              : (widget.item.description!.length > 250
-                                  ? AppFormat.removeHtmlTags(widget
-                                          .item.description!
-                                          .substring(0, 250)) +
-                                      '...'
-                                  : AppFormat.removeHtmlTags(
-                                      widget.item.description!)),
-                          textAlign: TextAlign.justify,
-                          style:
-                              fBlackMd.copyWith(fontWeight: FontWeight.w300)),
+                      if (cMagazine.isExpanded.value) ...[
+                        HtmlWidget(
+                          widget.item.description!,
+                          customStylesBuilder: (element) {
+                            if (element.localName == 'p') {
+                              return {
+                                'text-align': 'justify',
+                              };
+                            }
+                            return null;
+                          },
+                        )
+                      ] else ...[
+                        if (widget.item.description!.length > 250) ...[
+                          HtmlWidget(
+                            widget.item.description!.substring(0, 250) + '...',
+                            customStylesBuilder: (element) {
+                              if (element.localName == 'p') {
+                                return {
+                                  'text-align': 'justify',
+                                };
+                              }
+                              return null;
+                            },
+                          )
+                        ] else ...[
+                          HtmlWidget(
+                            widget.item.description!,
+                            customStylesBuilder: (element) {
+                              if (element.localName == 'p') {
+                                return {
+                                  'text-align': 'justify',
+                                };
+                              }
+                              return null;
+                            },
+                          )
+                        ]
+                      ],
                       TextButton(
                         onPressed: cMagazine.toggleExpanded,
                         child: Text(cMagazine.isExpanded.value
@@ -389,10 +434,10 @@ class _DetailPageState extends State<DetailPage> {
                         padding: const EdgeInsets.only(top: 10),
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              radius: 15,
-                              backgroundImage: NetworkImage(
-                                  'https://via.placeholder.com/200'),
+                            Icon(
+                              CupertinoIcons.profile_circled,
+                              color: Colors.grey,
+                              size: 25,
                             ),
                             const SizedBox(
                               width: 7,

@@ -97,11 +97,20 @@ class MagazineCard extends StatelessWidget {
                     Get.toNamed(AppRoutes.login);
                   }
                 },
-                icon: Icon(
-                  exists
-                      ? Icons.bookmark_outlined
-                      : Icons.bookmark_border_rounded,
-                  color: exists ? BaseColor.primary : Colors.white,
+                icon: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      Icons.bookmark_border_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                    Icon(
+                      Icons.bookmark,
+                      color: exists ? BaseColor.primary : Colors.transparent,
+                      size: 20,
+                    ),
+                  ],
                 ),
               ),
             ],

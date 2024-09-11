@@ -70,8 +70,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      cDashboard.videoControllers
-          .forEach((controller) => controller.pauseVideo());
+      for (var controller in cDashboard.videoControllers) {
+        controller.pauseVideo();
+      }
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -103,7 +104,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           },
           child: Stack(
             children: [
-              BackgroundWidget(),
+              const BackgroundWidget(),
               SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +182,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   color: Colors.white,
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    width: 1.5,
+                                      width: 1.5,
                                       color:
                                           BaseColor.primary.withOpacity(0.6))),
                               child: Padding(
@@ -223,9 +224,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 'Video terbaru',
                 style: fprimMd,
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * .3,
+              const SizedBox(
+                width: 5,
               ),
+              GestureDetector(
+                onTap: () {
+                  DialogCustom.showConfirmationDialog(
+                      'Jika video error',
+                      'Gulir layar anda ke bawah, hingga muncul indikator loading 🔃',
+                      () {},
+                      true);
+                },
+                child: const Icon(
+                  CupertinoIcons.question_circle,
+                  color: BaseColor.primary,
+                  size: 15,
+                ),
+              ),
+              const Spacer(),
               GestureDetector(
                 onTap: () {
                   Get.toNamed(
@@ -241,11 +257,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
         GetBuilder<DashboardController>(builder: (_) {
           if (_.loading) {
-            return LoadingCardWidget();
+            return const LoadingCardWidget();
           }
 
           if (_.videoControllers.isEmpty) {
-            return BlankItem();
+            return const BlankItem();
           }
 
           return SizedBox(
@@ -253,7 +269,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               reverse: false,
-              padding: EdgeInsets.only(left: 24),
+              padding: const EdgeInsets.only(left: 24),
               itemCount: _.videoControllers.length,
               itemBuilder: (ctx, index) {
                 return Padding(
@@ -269,7 +285,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             controller: _.videoControllers[index],
                             backgroundColor: Colors.transparent,
                             aspectRatio: 1.77,
-                            enableFullScreenOnVerticalDrag: true,
+                            enableFullScreenOnVerticalDrag: false,
                           ),
                         ),
                       ),
@@ -281,7 +297,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               await cDashboard.fetchVideoUrls();
                               _showVideoDialog(ctx, _.videoControllers[index]);
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               CupertinoIcons.fullscreen,
                               color: Colors.transparent,
                             )),
@@ -293,31 +309,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
           );
         }),
-        IconButton(
-          onPressed: () {
-            DialogCustom.showConfirmationDialog(
-              'Jika video error',
-              'Gulir layar anda ke bawah, hingga muncul indikator loading 🔃',
-              () {},
-            );
-          },
-          icon: Icon(
-            CupertinoIcons.arrow_2_circlepath_circle,
-            color: BaseColor.secondary.withOpacity(0.6),
-            size: 40,
-          ),
-        ),
-        SizedBox(height: 35),
+        const SizedBox(height: 55),
         Container(
-          padding: EdgeInsets.only(left: 20),
+          padding: const EdgeInsets.only(left: 20),
           alignment: Alignment.centerLeft,
           child: RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: "Ada yang ", style: fsecXl),
+                TextSpan(text: "Ada yang ", style: fsecLg),
                 TextSpan(
                   text: "baru nih...",
-                  style: fprimXl,
+                  style: fprimLg,
                 ),
               ],
             ),
@@ -587,7 +589,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           // Container(
           //   decoration: const BoxDecoration(
           //       color: Colors.white, shape: BoxShape.circle),
@@ -623,7 +625,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         GetBuilder<MagazineController>(
           builder: (_) {
             if (_.listMagazine.isEmpty) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
             List<MagazineItem> res = _.filteredMagazines;
@@ -644,7 +646,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               height: res.length * 130,
               child: ListView.builder(
                 itemCount: res.length,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   MagazineItem magazine = res[index];
@@ -656,7 +658,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   return Container(
                     height: 80,
                     width: double.infinity,
-                    margin: EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
@@ -705,7 +707,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                             alignment: Alignment.bottomRight,
                                             child: Text(
                                               "Halaman $lastPage dari $totalPage",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.grey,
                                               ),
@@ -738,7 +740,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
                                         if (state.extendedImageLoadState ==
                                             LoadState.loading) {
-                                          return LoadingCustom(
+                                          return const LoadingCustom(
                                               height: 55, width: 45);
                                         }
                                         return null;
@@ -773,7 +775,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget bestOfTheDayCard(Size size, BuildContext context) {
     return GetBuilder<MagazineController>(builder: (_) {
       if (_.listMagazine.isEmpty) {
-        return SizedBox();
+        return const SizedBox();
       }
       MagazineItem item = _.listMagazine.first;
       return Container(
@@ -817,7 +819,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
@@ -840,8 +842,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               child: Container(
                 height: 100,
                 width: size.width * .21,
-                decoration: BoxDecoration(
-                  boxShadow: const [
+                decoration: const BoxDecoration(
+                  boxShadow: [
                     BoxShadow(
                       offset: Offset(-5, 5),
                       blurRadius: 10,

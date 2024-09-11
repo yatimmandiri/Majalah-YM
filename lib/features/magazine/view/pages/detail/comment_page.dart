@@ -70,15 +70,16 @@ class _CommentPageState extends State<CommentPage> {
             padding: const EdgeInsets.only(right: 15),
             child: GestureDetector(
                 onTap: () => DialogCustom.showConfirmationDialog(
-                      'Tindakan',
-                      '1. Hapus, Tekan dan tahan area komentar\n2. Balas komentar, Tekan area komentar',
-                      () {},
-                    ),
+                    'Tindakan',
+                    '1. Hapus, Tekan dan tahan area komentar\n2. Balas komentar, Tekan area komentar',
+                    () {},
+                    true),
                 child: Icon(CupertinoIcons.question_circle)),
           )
         ],
       ),
       body: RefreshIndicator(
+        color: BaseColor.primary,
         onRefresh: () => cMagazine.getMagazine(),
         child: SingleChildScrollView(
           child: Padding(
@@ -190,12 +191,9 @@ class _CommentPageState extends State<CommentPage> {
           onLongPress: () {
             if (cAuth.dataUser.id == user!.id) {
               DialogCustom.showConfirmationDialog(
-                'Konfirmasi',
-                'Yakin ingin menghapus komentar anda?',
-                () {
-                  cMagazine.deleteComment(data.id!, comment.id!);
-                },
-              );
+                  'Konfirmasi', 'Yakin ingin menghapus komentar anda?', () {
+                cMagazine.deleteComment(data.id!, comment.id!);
+              }, false);
             }
           },
           onTap: () {
@@ -213,10 +211,10 @@ class _CommentPageState extends State<CommentPage> {
             padding: EdgeInsets.only(top: 30),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 15,
-                  backgroundImage:
-                      NetworkImage('https://via.placeholder.com/200'),
+                Icon(
+                  CupertinoIcons.profile_circled,
+                  color: Colors.grey,
+                  size: 25,
                 ),
                 const SizedBox(
                   width: 7,
@@ -225,17 +223,13 @@ class _CommentPageState extends State<CommentPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            comment.username!.isNotEmpty
-                                ? comment.username != cAuth.dataUser.name
-                                    ? comment.username.toString()
-                                    : 'Anda'
-                                : '@user',
-                            style: fBlackSm.copyWith(fontSize: 12),
-                          ),
-                        ],
+                      Text(
+                        comment.username!.isNotEmpty
+                            ? comment.username != cAuth.dataUser.name
+                                ? comment.username.toString()
+                                : 'Anda'
+                            : '@user',
+                        style: fBlackSm.copyWith(fontSize: 12),
                       ),
                       const SizedBox(
                         height: 3,

@@ -48,7 +48,7 @@ class AppRoutes {
   static List<GetPage> routes = [
     GetPage(
       name: splash,
-      page: () => SplashScreen(),
+      page: () => const HomePage(),
     ),
 
     // Auth Area
@@ -56,7 +56,7 @@ class AppRoutes {
         name: login,
         page: () => LoginPage(),
         transition: Transition.downToUp,
-        transitionDuration: Duration(milliseconds: 500)),
+        transitionDuration: const Duration(milliseconds: 500)),
     GetPage(
       name: verify,
       page: () {
@@ -82,7 +82,7 @@ class AppRoutes {
     // Dashboard Area
     GetPage(
       name: home,
-      page: () => HomePage(),
+      page: () => const HomePage(),
     ),
     GetPage(
       name: notif,
@@ -124,16 +124,16 @@ class AppRoutes {
     ),
     GetPage(
       name: comment,
-      page: () => CommentPage(),
+      page: () => const CommentPage(),
       middlewares: [AuthGuard()],
       transition: Transition.downToUp,
-      transitionDuration: Duration(milliseconds: 500),
+      transitionDuration: const Duration(milliseconds: 500),
     ),
 
     // Blog Area
     GetPage(
       name: blog,
-      page: () => BlogPage(),
+      page: () => const BlogPage(),
     ),
     GetPage(
       name: detailBlog,
@@ -146,7 +146,7 @@ class AppRoutes {
     ),
     GetPage(
       name: searchBlog,
-      page: () => SearchBlogPage(),
+      page: () => const SearchBlogPage(),
     ),
   ];
 

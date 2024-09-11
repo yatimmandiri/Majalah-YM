@@ -14,7 +14,7 @@ class BlankItem extends StatelessWidget {
         children: [
           AspectRatio(
               aspectRatio: 3,
-              child: Image.asset(img ?? 'assets/images/blank.png')),
+              child: Image.asset(img ?? 'assets/images/blank.png', )),
           const SizedBox(
             height: 10,
           ),

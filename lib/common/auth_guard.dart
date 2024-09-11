@@ -15,8 +15,9 @@ class AuthGuard extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     // Navigate to login if client is not authenticated other wise continue
-    if (!authService.isAuthenticated)
-      return RouteSettings(name: AppRoutes.login);
+    if (!authService.isAuthenticated) {
+      return const RouteSettings(name: AppRoutes.login);
+    }
     print(authService.isAuthenticated);
     return null;
   }

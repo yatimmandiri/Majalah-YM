@@ -37,6 +37,7 @@ class SettingPage extends StatelessWidget {
                           () async {
                             await cMaga.clearAllPagesData();
                           },
+                          false
                         );
                       }
                     },

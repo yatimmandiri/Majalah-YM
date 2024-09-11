@@ -31,7 +31,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
 
   @override
   void initState() {
-    cBlog.searchBlog(reset: false, key: searchBlogC.text);
+    cBlog.searchBlog(reset: true, key: searchBlogC.text);
     cBlog.searchNews(reset: false, key: searchNewsC.text);
     scrollNewsC.addListener(() {
       if (scrollNewsC.position.maxScrollExtent == scrollNewsC.offset) {
@@ -98,11 +98,14 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                       padding: const EdgeInsets.only(right: 15),
                       child: GestureDetector(
                           onTap: () => DialogCustom.showConfirmationDialog(
-                                'Tindakan',
-                                'Untuk mencari literasi, ketik saja pada kolom pencarian, setelah itu tekan tombol ikon cari',
-                                () {},
-                              ),
-                          child: Icon(CupertinoIcons.question_circle, color: BaseColor.secondary,)),
+                              'Tindakan',
+                              'Untuk mencari literasi, ketik saja pada kolom pencarian, setelah itu tekan tombol ikon cari',
+                              () {},
+                              true),
+                          child: Icon(
+                            CupertinoIcons.question_circle,
+                            color: BaseColor.secondary,
+                          )),
                     )
                   ],
                 ),
@@ -219,21 +222,20 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 20),
                                       child: Center(
-                                          child: _.hasMoreNews.isTrue
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 120),
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                )
-                                              : Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 150),
-                                                  child: Text(
-                                                      'Sudah tidak ada data lagi'),
-                                                )),
+                                        child: _.hasMoreNews.isTrue
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 120),
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              )
+                                            : Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 150),
+                                                child: Text(
+                                                    'sudah tidak ada topik lagi'),
+                                              ),
+                                      ),
                                     );
                                   }
                                 },
@@ -244,7 +246,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                       ),
                     ),
 
-                    // Blog
+                    // Blog 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
@@ -325,7 +327,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                           child: _.hasMoreBlog.isTrue
                                               ? CircularProgressIndicator()
                                               : Text(
-                                                  'Sudah tidak ada data lagi')),
+                                                  'sudah tidak ada topik lagi')),
                                     );
                                   }
                                 },

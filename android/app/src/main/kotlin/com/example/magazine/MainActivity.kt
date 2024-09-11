@@ -1,4 +1,4 @@
-package com.yatimmandiri.magazine
+package com.majalahym.app
 
 import io.flutter.embedding.android.FlutterActivity
 
