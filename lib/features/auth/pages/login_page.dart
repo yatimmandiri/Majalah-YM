@@ -13,7 +13,7 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.7),
-      body: Center(
+      body: const Center(
         child: CircularProgressIndicator(), // Menampilkan loading indicator
       ),
     );

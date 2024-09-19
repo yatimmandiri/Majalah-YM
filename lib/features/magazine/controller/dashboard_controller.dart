@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -18,11 +19,11 @@ class DashboardController extends GetxController {
   }
 
   Future<void> fetchVideoUrls() async {
+    // AIzaSyAtfdK9jSpnk7xGDLgpSTUZJxCcRyaFq2Y
     const String apiKey = 'AIzaSyAtfdK9jSpnk7xGDLgpSTUZJxCcRyaFq2Y';
     const String channelId = 'UCc3rKFw9euF4aKfoJ-ynFeA';
-    final String url =
+    const String url =
         'https://www.googleapis.com/youtube/v3/search?key=$apiKey&channelId=$channelId&part=snippet,id&order=date&maxResults=3';
-
     _loading.value = true;
 
     try {
@@ -30,7 +31,9 @@ class DashboardController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print(data);
+        if (kDebugMode) {
+          print(data);
+        }
         final List videoIds =
             data['items'].map((item) => item['id']['videoId']).toList();
 
@@ -72,7 +75,9 @@ class DashboardController extends GetxController {
 
   @override
   void onClose() {
-    videoControllers.forEach((controller) => controller.close());
+    for (var controller in videoControllers) {
+      controller.close();
+    }
     super.onClose();
   }
 }

@@ -22,7 +22,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          BackgroundWidget(),
+          const BackgroundWidget(),
           SizedBox(
             width: size.width,
             height: size.height,
@@ -33,13 +33,13 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Align(
+                    const Align(
                       alignment: Alignment.topLeft,
                       child: BackButtonCustom(
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     SizedBox(
@@ -81,7 +81,7 @@ class ProfilePage extends StatelessWidget {
 
                                     if (state.extendedImageLoadState ==
                                         LoadState.loading) {
-                                      return LoadingCustom(
+                                      return const LoadingCustom(
                                           radius: 100, height: 100, width: 100);
                                     }
                                     return null;
@@ -133,11 +133,11 @@ class ProfilePage extends StatelessWidget {
                       style: fMd.copyWith(fontSize: 24),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -152,12 +152,12 @@ class ProfilePage extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             CupertinoIcons.mail,
                             color: BaseColor.secondary,
                             size: 40,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Flexible(
@@ -179,11 +179,11 @@ class ProfilePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -198,12 +198,12 @@ class ProfilePage extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             CupertinoIcons.phone,
                             color: BaseColor.secondary,
                             size: 40,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Flexible(

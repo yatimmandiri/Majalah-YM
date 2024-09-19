@@ -57,7 +57,7 @@ class _DetailBlogPageState extends State<DetailBlogPage> {
         onPressed: () {
           Get.back();
         },
-        child: Icon(Icons.arrow_back),
+        child: const Icon(Icons.arrow_back),
       ),
     );
   }

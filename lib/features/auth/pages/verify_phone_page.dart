@@ -32,14 +32,14 @@ class VerifyPhonePage extends StatelessWidget {
                   ),
                   keyboardType: TextInputType.phone,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Obx(() {
                   if (authController.loading) {
                     return TextButton(
                       onPressed: () {},
-                      child: CircularProgressIndicator(
+                      child: const CircularProgressIndicator(
                         color: BaseColor.secondary,
                       ),
                     );

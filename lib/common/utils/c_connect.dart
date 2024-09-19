@@ -15,7 +15,7 @@ class ConnectivityController extends GetxController {
           "No Internet",
           "You are not connected to the internet",
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(days: 365), // Keep showing until connection is restored
+          duration: const Duration(days: 365), // Keep showing until connection is restored
         );
       } else {
         Get.closeAllSnackbars();

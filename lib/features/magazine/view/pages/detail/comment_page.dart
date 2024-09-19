@@ -74,7 +74,7 @@ class _CommentPageState extends State<CommentPage> {
                     '1. Hapus, Tekan dan tahan area komentar\n2. Balas komentar, Tekan area komentar',
                     () {},
                     true),
-                child: Icon(CupertinoIcons.question_circle)),
+                child: const Icon(CupertinoIcons.question_circle)),
           )
         ],
       ),
@@ -90,19 +90,19 @@ class _CommentPageState extends State<CommentPage> {
                   final magazine = _.getMagazineById(data.id!);
 
                   if (magazine == null) {
-                    return Center(child: CircularProgressIndicator.adaptive());
+                    return const Center(child: CircularProgressIndicator.adaptive());
                   }
 
                   if (magazine.comments!.isEmpty) {
-                    return Center(child: BlankItem());
+                    return const Center(child: BlankItem());
                   }
 
                   List<CommentItem> sort = magazine.comments!.reversed
                       .where((comment) => comment.parentId == 0)
                       .toList();
-                  print(sort);
                   return ListView.builder(
                     itemCount: sort.length,
+                    padding: const EdgeInsets.only(bottom: 40),
                     itemBuilder: (context, index) {
                       final comment = sort[index];
                       _.fetchUser(comment.userId!);
@@ -143,8 +143,8 @@ class _CommentPageState extends State<CommentPage> {
                     )),
                   ],
                   if (cMagazine.loadButton) ...[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: CircularProgressIndicator.adaptive(
                         backgroundColor: BaseColor.primary,
                       ),
@@ -152,7 +152,7 @@ class _CommentPageState extends State<CommentPage> {
                   ] else ...[
                     Container(
                       margin: const EdgeInsets.only(left: 3),
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                           color: BaseColor.secondary,
                           borderRadius: BorderRadius.circular(35)),
@@ -164,7 +164,7 @@ class _CommentPageState extends State<CommentPage> {
                             replyingToCommentId = null;
                           });
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.send,
                           color: Colors.white,
                         ),
@@ -208,10 +208,10 @@ class _CommentPageState extends State<CommentPage> {
             });
           },
           child: Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: const EdgeInsets.only(top: 30),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   CupertinoIcons.profile_circled,
                   color: Colors.grey,
                   size: 25,
@@ -287,11 +287,11 @@ class _CommentPageState extends State<CommentPage> {
       return Text(
         userName == cAuth.dataUser.name
             ? 'Balas anda ${parentComment.id}'
-            : 'Membalas ${userName}',
+            : 'Membalas $userName',
         style: fsecSm.copyWith(fontSize: 12),
       );
     } else {
-      return Text('');
+      return const Text('');
     }
   }
 }

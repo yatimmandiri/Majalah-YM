@@ -46,7 +46,7 @@ class NewsCard extends StatelessWidget {
                 }
 
                 if (state.extendedImageLoadState == LoadState.loading) {
-                  return LoadingBannerWidget();
+                  return const LoadingBannerWidget();
                 }
                 return null;
               },
@@ -83,7 +83,7 @@ class NewsCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Row(
@@ -102,7 +102,7 @@ class NewsCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                       ],

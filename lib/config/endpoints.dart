@@ -20,6 +20,6 @@ class Endpoint {
   static final catMagazines = "$api/categories-magazines";
 
   //Blog & News
-  static final blog = "https://yatimmandiri.org/blog/wp-json/ymapi/v1/posts";
-  static final news = "https://yatimmandiri.org/news/wp-json/ymapi/v1/posts";
+  static const blog = "https://yatimmandiri.org/blog/wp-json/ymapi/v1/posts";
+  static const news = "https://yatimmandiri.org/news/wp-json/ymapi/v1/posts";
 }

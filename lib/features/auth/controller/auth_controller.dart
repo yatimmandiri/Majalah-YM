@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -63,14 +64,17 @@ class AuthController extends GetxController {
       if (user == null) {
         Get.back();
       } else {
-        print(user.id);
-        print(user.photoUrl);
+        if (kDebugMode) {
+          print(user.id);
+          print(user.photoUrl);
+        }
         Session.saveGooglePhoto(user.photoUrl);
         await cbLogin(user.id, user.email, user.displayName);
       }
     } catch (e) {
       Get.back();
-      Fluttertoast.showToast(backgroundColor: Colors.red, msg: "Gagal Masuk, Error $e");
+      Fluttertoast.showToast(
+          backgroundColor: Colors.red, msg: "Gagal Masuk, Error $e");
     }
     return null;
   }
@@ -88,7 +92,9 @@ class AuthController extends GetxController {
       });
 
       if (response['status'] == true) {
-        print(response['data']['access_token']);
+        if (kDebugMode) {
+          print(response['data']['access_token']);
+        }
         Session.saveToken(response['data']['access_token']);
         // nomorC.clear();
         getToken();
@@ -101,12 +107,14 @@ class AuthController extends GetxController {
           Get.offAllNamed(AppRoutes.home);
         });
       } else {
-        Fluttertoast.showToast(backgroundColor: Colors.red, msg: "Gagal login $response");
+        Fluttertoast.showToast(
+            backgroundColor: Colors.red, msg: "Gagal login $response");
         Timer(const Duration(seconds: 2), () {
           _loading.value = false;
         });
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error during Google Sign-In: $e");
       throw Exception('Failed to sign in with Google');
     }
@@ -129,6 +137,7 @@ class AuthController extends GetxController {
       }
     } else {
       // Handle missing token
+      // ignore: avoid_print
       print('User not logged in');
     }
 
@@ -165,6 +174,7 @@ class AuthController extends GetxController {
             backgroundColor: Colors.red, msg: "Gagal logout");
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error during Google Sign-Out: $e");
     }
 

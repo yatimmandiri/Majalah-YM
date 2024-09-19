@@ -18,7 +18,6 @@ import 'package:magazine/features/magazine/view/pages/search_page.dart';
 import 'package:magazine/features/magazine/view/widgets/popular_page.dart';
 import 'package:magazine/features/notification/notif_page.dart';
 import 'package:magazine/features/setting_page.dart';
-import 'package:magazine/features/splash_screen.dart';
 import 'package:magazine/common/auth_guard.dart';
 
 class AppRoutes {

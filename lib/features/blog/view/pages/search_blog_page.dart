@@ -93,7 +93,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                       'Pencarian',
                       style: fsecLg,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.only(right: 15),
                       child: GestureDetector(
@@ -102,7 +102,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                               'Untuk mencari literasi, ketik saja pada kolom pencarian, setelah itu tekan tombol ikon cari',
                               () {},
                               true),
-                          child: Icon(
+                          child: const Icon(
                             CupertinoIcons.question_circle,
                             color: BaseColor.secondary,
                           )),
@@ -114,7 +114,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                 height: 20,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 height: 35,
                 child: TabBar(
                   indicatorSize: TabBarIndicatorSize.label,
@@ -131,12 +131,12 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                         icon: Container(
                             alignment: Alignment.center,
                             width: double.infinity,
-                            child: Text('Berita Terkini'))),
+                            child: const Text('Berita Terkini'))),
                     Tab(
                         icon: Container(
                             alignment: Alignment.center,
                             width: double.infinity,
-                            child: Text('Blog'))),
+                            child: const Text('Blog'))),
                   ],
                 ),
               ),
@@ -149,7 +149,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           SizedBox(
                             height: 60,
                             child: InputForm(
@@ -171,7 +171,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                               sideColor: Colors.transparent,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           GetBuilder<BlogController>(builder: (_) {
                             if (_.listNews.isEmpty) {
                               return const BlankItem();
@@ -183,10 +183,10 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                 child: ListView.builder(
                                   itemCount: 3,
                                   itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
+                                    return const Padding(
+                                      padding: EdgeInsets.symmetric(
                                           vertical: 10),
-                                      child: const LoadingCustom(
+                                      child: LoadingCustom(
                                         height: 80,
                                         width: double.infinity,
                                         radius: 20,
@@ -202,7 +202,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                               child: ListView.builder(
                                 controller: scrollNewsC,
                                 itemCount: _.listNews.length + 1,
-                                padding: EdgeInsets.only(bottom: 35),
+                                padding: const EdgeInsets.only(bottom: 35),
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
                                   if (index < _.listNews.length) {
@@ -223,14 +223,14 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                           vertical: 20),
                                       child: Center(
                                         child: _.hasMoreNews.isTrue
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
+                                            ? const Padding(
+                                                padding: EdgeInsets.only(
                                                     bottom: 120),
                                                 child:
                                                     CircularProgressIndicator(),
                                               )
-                                            : Padding(
-                                                padding: const EdgeInsets.only(
+                                            : const Padding(
+                                                padding: EdgeInsets.only(
                                                     bottom: 150),
                                                 child: Text(
                                                     'sudah tidak ada topik lagi'),
@@ -251,7 +251,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           SizedBox(
                             height: 60,
                             child: InputForm(
@@ -273,7 +273,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                               sideColor: Colors.transparent,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           SizedBox(
                             height: size.height * .7,
                             child: GetBuilder<BlogController>(builder: (_) {
@@ -287,10 +287,10 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                   child: ListView.builder(
                                     itemCount: 3,
                                     itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
+                                      return const Padding(
+                                        padding: EdgeInsets.symmetric(
                                             vertical: 10),
-                                        child: const LoadingCustom(
+                                        child: LoadingCustom(
                                           height: 80,
                                           width: double.infinity,
                                           radius: 20,
@@ -304,7 +304,7 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                               return ListView.builder(
                                 controller: scrollBlogC,
                                 itemCount: _.listBlog.length + 1,
-                                padding: EdgeInsets.only(bottom: 35),
+                                padding: const EdgeInsets.only(bottom: 35),
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
                                   if (index < _.listBlog.length) {
@@ -325,8 +325,8 @@ class _SearchBlogPageState extends State<SearchBlogPage> {
                                           vertical: 20),
                                       child: Center(
                                           child: _.hasMoreBlog.isTrue
-                                              ? CircularProgressIndicator()
-                                              : Text(
+                                              ? const CircularProgressIndicator()
+                                              : const Text(
                                                   'sudah tidak ada topik lagi')),
                                     );
                                   }

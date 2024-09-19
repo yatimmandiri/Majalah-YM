@@ -163,44 +163,48 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ],
                 ),
               ),
+
+              //
               Align(
                 alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 35, right: 20),
-                  child: !authController.isAuthenticated
-                      ? SizedBox(
-                          width: 60,
-                          child: ButtonCustom(
-                              padding: 10,
-                              borderRadius: 20,
-                              onClick: () => Get.toNamed(AppRoutes.login),
-                              text: 'Masuk'),
-                        )
-                      : Builder(builder: (ctx) {
-                          return Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                      width: 1.5,
-                                      color:
-                                          BaseColor.primary.withOpacity(0.6))),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: InkWell(
-                                  onTap: () {
-                                    Scaffold.of(ctx).openDrawer();
-                                  },
-                                  child: SvgPicture.asset(
-                                    'assets/icons/menu.svg',
-                                    color: BaseColor.primary,
-                                    height: 23,
-                                    width: 23,
+                child: Obx(() {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 35, right: 20),
+                    child: authController.tokenAccess.isEmpty
+                        ? SizedBox(
+                            width: 60,
+                            child: ButtonCustom(
+                                padding: 10,
+                                borderRadius: 20,
+                                onClick: () => Get.toNamed(AppRoutes.login),
+                                text: 'Masuk'),
+                          )
+                        : Builder(builder: (ctx) {
+                            return Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 1.5,
+                                        color: BaseColor.primary
+                                            .withOpacity(0.6))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Scaffold.of(ctx).openDrawer();
+                                    },
+                                    child: SvgPicture.asset(
+                                      'assets/icons/menu.svg',
+                                      color: BaseColor.primary,
+                                      height: 23,
+                                      width: 23,
+                                    ),
                                   ),
-                                ),
-                              ));
-                        }),
-                ),
+                                ));
+                          }),
+                  );
+                }),
               )
             ],
           ),
@@ -213,58 +217,58 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget youtube() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Video terbaru',
-                style: fprimMd,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              GestureDetector(
-                onTap: () {
-                  DialogCustom.showConfirmationDialog(
-                      'Jika video error',
-                      'Gulir layar anda ke bawah, hingga muncul indikator loading 🔃',
-                      () {},
-                      true);
-                },
-                child: const Icon(
-                  CupertinoIcons.question_circle,
-                  color: BaseColor.primary,
-                  size: 15,
-                ),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Get.toNamed(
-                      '${AppRoutes.detailBlog}?url=https://www.youtube.com/@yatimmandirichannel');
-                },
-                child: Text(
-                  'Tonton Semuanya',
+    return GetBuilder<DashboardController>(builder: (_) {
+      if (_.loading) {
+        return const LoadingCardWidget();
+      }
+
+      if (_.videoControllers.isEmpty) {
+        return const SizedBox();
+      }
+
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Video terbaru',
                   style: fprimMd,
                 ),
-              ),
-            ],
+                const SizedBox(
+                  width: 5,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    DialogCustom.showConfirmationDialog(
+                        'Jika video error',
+                        'Gulir layar anda ke bawah, hingga muncul indikator loading 🔃',
+                        () {},
+                        true);
+                  },
+                  child: const Icon(
+                    CupertinoIcons.question_circle,
+                    color: BaseColor.primary,
+                    size: 15,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(
+                        '${AppRoutes.detailBlog}?url=https://www.youtube.com/@yatimmandirichannel');
+                  },
+                  child: Text(
+                    'Tonton Semuanya',
+                    style: fprimMd,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        GetBuilder<DashboardController>(builder: (_) {
-          if (_.loading) {
-            return const LoadingCardWidget();
-          }
-
-          if (_.videoControllers.isEmpty) {
-            return const BlankItem();
-          }
-
-          return SizedBox(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.22,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -295,6 +299,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         child: IconButton(
                             onPressed: () async {
                               await cDashboard.fetchVideoUrls();
+                              // ignore: use_build_context_synchronously
                               _showVideoDialog(ctx, _.videoControllers[index]);
                             },
                             icon: const Icon(
@@ -307,26 +312,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 );
               },
             ),
-          );
-        }),
-        const SizedBox(height: 55),
-        Container(
-          padding: const EdgeInsets.only(left: 20),
-          alignment: Alignment.centerLeft,
-          child: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(text: "Ada yang ", style: fsecLg),
-                TextSpan(
-                  text: "baru nih...",
-                  style: fprimLg,
-                ),
-              ],
-            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   void _showVideoDialog(BuildContext ctx, YoutubePlayerController controller) {
@@ -773,129 +762,155 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget bestOfTheDayCard(Size size, BuildContext context) {
-    return GetBuilder<MagazineController>(builder: (_) {
-      if (_.listMagazine.isEmpty) {
-        return const SizedBox();
-      }
-      MagazineItem item = _.listMagazine.first;
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 20),
-        width: double.infinity,
-        height: 245,
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: EdgeInsets.only(
-                  left: 24,
-                  top: 24,
-                  right: size.width * .1,
+    return Column(
+      children: [
+        const SizedBox(height: 45),
+        Container(
+          padding: const EdgeInsets.only(left: 20),
+          alignment: Alignment.centerLeft,
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: "Ada yang ", style: fsecLg),
+                TextSpan(
+                  text: "baru nih...",
+                  style: fprimLg,
                 ),
-                height: 230,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(29),
-                  boxShadow: const [
-                    BoxShadow(
-                      offset: Offset(10, 20),
-                      blurRadius: 20,
-                      color: Colors.black26,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(right: size.width * .25),
-                      child: Text(
-                        item.name ?? '',
-                        style: fLg,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(
-                        AppFormat.removeHtmlTags(item.description!),
-                        textAlign: TextAlign.justify,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: fsecMd.copyWith(fontSize: 12),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-            Positioned(
-              right: 20,
-              top: 0,
-              child: Container(
-                height: 100,
-                width: size.width * .21,
-                decoration: const BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(-5, 5),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                      color: Colors.black26,
-                    ),
-                  ],
-                ),
-                child: ExtendedImage.network(
-                  '${Endpoint.storage}/${item.cover}',
-                  fit: BoxFit.cover,
-                  handleLoadingProgress: true,
-                  width: size.width * .21,
-                  height: 100,
-                  loadStateChanged: (state) {
-                    if (state.extendedImageLoadState == LoadState.failed) {
-                      return AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Material(
-                            borderRadius: BorderRadius.circular(18),
-                            color: Colors.grey[300],
-                            child: const Icon(Icons.broken_image_outlined),
-                          ));
-                    }
-
-                    if (state.extendedImageLoadState == LoadState.loading) {
-                      return LoadingCustom(
-                          height: 100, width: size.width * .21);
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: SizedBox(
-                height: 40,
-                width: size.width * .3,
-                child: TwoSideRoundedButton(
-                  text: "Baca",
-                  radious: 24,
-                  press: () {
-                    Get.toNamed(AppRoutes.detailMagazine, arguments: item);
-                  },
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      );
-    });
+        const SizedBox(height: 15),
+        GetBuilder<MagazineController>(builder: (_) {
+          if (_.listMagazine.isEmpty) {
+            return const SizedBox();
+          }
+          MagazineItem item = _.listMagazine.first;
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            width: double.infinity,
+            height: 245,
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: 230,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(29),
+                      boxShadow: const [
+                        BoxShadow(
+                          offset: Offset(10, 20),
+                          blurRadius: 20,
+                          color: Colors.black26,
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 24,
+                            top: 24,
+                            right: size.width * .1,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(right: size.width * .25),
+                                child: Text(
+                                  item.name ?? '',
+                                  style: fLg,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Text(
+                                  AppFormat.removeHtmlTags(item.description!),
+                                  textAlign: TextAlign.justify,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: fsecMd.copyWith(fontSize: 12),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: SizedBox(
+                            height: 40,
+                            width: size.width * .3,
+                            child: TwoSideRoundedButton(
+                              text: "Baca",
+                              radious: 24,
+                              press: () {
+                                Get.toNamed(AppRoutes.detailMagazine,
+                                    arguments: item);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 20,
+                  top: 0,
+                  child: Container(
+                    height: 100,
+                    width: size.width * .21,
+                    decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(-5, 5),
+                          blurRadius: 10,
+                          spreadRadius: 2,
+                          color: Colors.black26,
+                        ),
+                      ],
+                    ),
+                    child: ExtendedImage.network(
+                      '${Endpoint.storage}/${item.cover}',
+                      fit: BoxFit.cover,
+                      handleLoadingProgress: true,
+                      width: size.width * .21,
+                      height: 100,
+                      loadStateChanged: (state) {
+                        if (state.extendedImageLoadState == LoadState.failed) {
+                          return AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Material(
+                                borderRadius: BorderRadius.circular(18),
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.broken_image_outlined),
+                              ));
+                        }
+
+                        if (state.extendedImageLoadState == LoadState.loading) {
+                          return LoadingCustom(
+                              height: 100, width: size.width * .21);
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      ],
+    );
   }
 }

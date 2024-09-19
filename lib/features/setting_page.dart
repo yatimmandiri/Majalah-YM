@@ -22,7 +22,7 @@ class SettingPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Hapus semua terakhir baca'),
+              const Text('Hapus semua terakhir baca'),
               Obx(() {
                 return SizedBox(
                   height: 40,

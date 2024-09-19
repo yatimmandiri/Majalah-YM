@@ -65,7 +65,7 @@ class BlogCard extends StatelessWidget {
                         }
 
                         if (state.extendedImageLoadState == LoadState.loading) {
-                          return LoadingCustom(height: 80, width: 80);
+                          return const LoadingCustom(height: 80, width: 80);
                         }
                         return null;
                       },
@@ -83,7 +83,7 @@ class BlogCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text(
